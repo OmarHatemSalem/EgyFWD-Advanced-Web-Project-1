@@ -6,10 +6,12 @@ const routes = express.Router();
 routes.get('/', (req, res) => {
     // console.log(req.url);
     let info = new URL(req.url, `http://${req.headers.host}`);
-    console.log(info);
+    console.log(info.searchParams.get('filename'));
     res.send(req.headers);
     });
 
 routes.use('/images', images);
+
+
 
 export default routes;
