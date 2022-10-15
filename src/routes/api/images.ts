@@ -3,11 +3,10 @@ import path from 'path';
 const images = express.Router();
 
 const sharp = require('sharp');
-const fs = require('fs');
 
 
-images.get('/', (req, res) => {
-    res.send("images here!");
+/*images.get('/', (req, res) => {
+    res.send(path.join(__dirname, '/../../full'));
 
     /*
     res.send(sharp('input.jpg')
@@ -17,14 +16,14 @@ images.get('/', (req, res) => {
   .toBuffer()
   .then( data => { ... })
   .catch( err => { ... });)
-    */
+  
     console.log("images here!");
     
-    });
+    });*/
 
 images.get('/', function (req, res, next) {
   var options = {
-    root: path.join(__dirname, 'public'),
+    root: path.join(__dirname, '/../../full'),
     dotfiles: 'deny',
     headers: {
       'x-timestamp': Date.now(),
@@ -34,9 +33,11 @@ images.get('/', function (req, res, next) {
 
   let info = new URL(req.url, `http://${req.headers.host}`);
 
-  let fileNameOpt = info.searchParams.get('filename')
   let fileName = "";
-  if (typeof(fileNameOpt)== null) {}
+  if (info.searchParams.has("filename")) {fileName = info.searchParams.get("filename")!; fileName += ".jpg";}
+  else {fileName = "empty.png";}
+
+  
   res.sendFile(fileName, options, function (err) {
     if (err) {
       next(err)
