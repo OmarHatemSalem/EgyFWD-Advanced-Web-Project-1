@@ -23,7 +23,7 @@ const sharp = require('sharp');
 
 images.get('/', function (req, res, next) {
   var options = {
-    root: path.join(__dirname, '/../../full'),
+    root: path.join(__dirname, '/../../thumb'),
     dotfiles: 'deny',
     headers: {
       'x-timestamp': Date.now(),
@@ -31,14 +31,29 @@ images.get('/', function (req, res, next) {
     }
   }
 
+  let inputDir :string = path.join(__dirname, '/../../full')+"/";
+  let outputDir :string = path.join(__dirname, '/../../thumb')+"/";
+
   let info = new URL(req.url, `http://${req.headers.host}`);
 
   let fileName = "";
-  if (info.searchParams.has("filename")) {fileName = info.searchParams.get("filename")!; fileName += ".jpg";}
+  const height = parseInt(info.searchParams.get("height")!); 
+  const width = parseInt(info.searchParams.get("width")!); 
+  if (info.searchParams.has("filename")) {fileName = info.searchParams.get("filename")!; /*fileName += ".jpg"*/;}
   else {fileName = "empty.png";}
 
-  
-  res.sendFile(fileName, options, function (err) {
+  sharp(`${inputDir}${fileName}.jpg`)
+  .resize(300, 200)
+  .toFile(`${outputDir}${fileName}${height}${width}.jpg`, function(err: Error) {
+    if (err) {
+      next(err)
+    } else {
+      console.log('Sent:', fileName)
+    }
+  });
+
+
+  res.sendFile(`${fileName}${height}${width}.jpg`, options, function (err) {
     if (err) {
       next(err)
     } else {
