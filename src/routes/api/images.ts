@@ -31,7 +31,7 @@ images.get('/', function (req, res, next) {
     }
   }
 
-  let inputDir :string = path.join(__dirname, '/../../full')+"/";
+  let inputDir :string = path.join(__dirname, '/../../full')+"\\";
   let outputDir :string = path.join(__dirname, '/../../thumb')+"/";
 
   let info = new URL(req.url, `http://${req.headers.host}`);
@@ -42,24 +42,30 @@ images.get('/', function (req, res, next) {
   if (info.searchParams.has("filename")) {fileName = info.searchParams.get("filename")!; /*fileName += ".jpg"*/;}
   else {fileName = "empty.png";}
 
-  sharp(`${inputDir}${fileName}.jpg`)
-  .resize(300, 200)
-  .toFile(`${outputDir}${fileName}${height}${width}.jpg`, function(err: Error) {
-    if (err) {
-      next(err)
-    } else {
-      console.log('Sent:', fileName)
-    }
-  });
+  
+  if (height === NaN || width === NaN) {
+    res.send("Please Enter desired height and dimensions");
+  } else {
 
 
   res.sendFile(`${fileName}${height}${width}.jpg`, options, function (err) {
     if (err) {
-      next(err)
+      sharp(`${inputDir}${fileName}.jpg`)
+      .resize(height, width)
+      .toFile(`${outputDir}${fileName}${height}${width}.jpg`, function(err: Error) {
+        if (err) {
+          next(err)
+        } else {
+          console.log('Sent:', fileName)
+        }
+      });
+
+      res.sendFile(`${fileName}${height}${width}.jpg`, options);
     } else {
-      console.log('Sent:', fileName)
+      console.log('Retrieved:', fileName)
     }
   })
+}
 })
 
 export default images;
