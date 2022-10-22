@@ -5,9 +5,7 @@ const routes = express.Router();
 
 routes.get('/', (req, res) => {
     // console.log(req.url);
-    let info = new URL(req.url, `http://${req.headers.host}`);
-    console.log(info.searchParams.get('filename'));
-    res.send(req.headers);
+    res.send("Hello World!")
     });
 
 routes.use('/images', images);

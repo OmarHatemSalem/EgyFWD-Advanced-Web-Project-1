@@ -61,8 +61,10 @@ images.get('/', function (req, res, next) {
       });
 
       res.sendFile(`${fileName}${height}${width}.jpg`, options);
+      res.sendStatus(200);
     } else {
       console.log('Retrieved:', fileName)
+      res.sendStatus(200);
     }
   })
 }
