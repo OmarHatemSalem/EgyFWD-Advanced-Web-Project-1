@@ -1,8 +1,10 @@
 import express from 'express';   
 import path from 'path';
+import resizeImage from '../../utilities/imageProcesser';
+import { access, constants } from 'node:fs';
 const images = express.Router();
+const request = require('supertest');
 
-const sharp = require('sharp');
 
 
 /*images.get('/', (req, res) => {
@@ -21,7 +23,7 @@ const sharp = require('sharp');
     
     });*/
 
-images.get('/', function (req, res, next) {
+images.get('/', function (req:express.Request, res:express.Response, next:express.NextFunction) {
   var options = {
     root: path.join(__dirname, '/../../thumb'),
     dotfiles: 'deny',
@@ -31,7 +33,7 @@ images.get('/', function (req, res, next) {
     }
   }
 
-  let inputDir :string = path.join(__dirname, '/../../full')+"\\";
+  let inputDir :string = path.join(__dirname, '/../../../full')+"\\";
   let outputDir :string = path.join(__dirname, '/../../thumb')+"/";
 
   let info = new URL(req.url, `http://${req.headers.host}`);
@@ -43,12 +45,20 @@ images.get('/', function (req, res, next) {
   else {fileName = "empty.png";}
 
   
-  if (height === NaN || width === NaN) {
+  if (isNaN(height) || isNaN(width)) {
     res.send("Please Enter desired height and dimensions");
   } else {
+    //const myLog = new File(`${outputDir}${fileName}${height}${width}.jpg`);
+    access(`${outputDir}${fileName}${height}${width}.jpg`, constants.F_OK, (err) => {
+      console.log('does not exist');
+      resizeImage(inputDir, outputDir, fileName, height, width);
+      res.sendFile(`${fileName}${height}${width}.jpg`, options);
+    });
 
+  //res.sendStatus(200);
+  }
 
-  res.sendFile(`${fileName}${height}${width}.jpg`, options, function (err) {
+  /*res.sendFile(`${fileName}${height}${width}.jpg`, options, function (err) {
     if (err) {
       sharp(`${inputDir}${fileName}.jpg`)
       .resize(height, width)
@@ -66,8 +76,7 @@ images.get('/', function (req, res, next) {
       console.log('Retrieved:', fileName)
       res.sendStatus(200);
     }
-  })
-}
-})
+  })*/
+});
 
 export default images;
