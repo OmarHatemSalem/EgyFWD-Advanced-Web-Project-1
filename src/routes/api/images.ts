@@ -52,7 +52,9 @@ images.get('/', function (req:express.Request, res:express.Response, next:expres
     access(`${outputDir}${fileName}${height}${width}.jpg`, constants.F_OK, (err) => {
       console.log('does not exist');
       resizeImage(inputDir, outputDir, fileName, height, width);
-      res.sendFile(`${fileName}${height}${width}.jpg`, options);
+      setTimeout(() => {
+        res.sendFile(`${fileName}${height}${width}.jpg`, options);
+      }, 1000)
     });
 
   //res.sendStatus(200);
