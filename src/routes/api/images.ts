@@ -28,7 +28,7 @@ images.get(
     res: express.Response,
     next: express.NextFunction
   ) {
-    var options = {
+    const options = {
       root: path.join(__dirname, "/../../thumb"),
       dotfiles: "deny",
       headers: {
@@ -37,8 +37,8 @@ images.get(
       },
     };
 
-    let inputDir: string = path.join(__dirname, "/../../../full") + "\\";
-    let outputDir: string = path.join(__dirname, "/../../thumb") + "/";
+    const inputDir: string = path.join(__dirname, "/../../../full") + "\\";
+    const outputDir: string = path.join(__dirname, "/../../thumb") + "/";
 
     let info = new URL(req.url, `http://${req.headers.host}`);
 

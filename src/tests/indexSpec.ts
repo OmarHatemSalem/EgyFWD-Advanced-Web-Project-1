@@ -1,6 +1,8 @@
 import routes from "../routes";
 import images from "../routes/api/images";
 import resizeImage from "../utilities/imageProcesser";
+import path from "path";
+
 
 it("expect Hello World", () => {
   expect(routes.get("/")).toBeTruthy();
