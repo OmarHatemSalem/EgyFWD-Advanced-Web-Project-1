@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const sharp = require('sharp');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const sharp = require("sharp");
 const resizeImage = (inputDir, outputDir, fileName, height, width) => {
     sharp(`${inputDir}${fileName}.jpg`)
         .resize(height, width)
@@ -9,7 +10,7 @@ const resizeImage = (inputDir, outputDir, fileName, height, width) => {
             console.log("Error Occured!");
         }
         else {
-            console.log('Sent:', fileName);
+            console.log("Sent:", fileName);
         }
     });
 };
