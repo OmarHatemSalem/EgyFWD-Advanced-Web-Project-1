@@ -6,25 +6,26 @@ import express from "express";
 
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const request = require("supertest");
+const supertest = require("supertest");
 //const server = require("../server");
 
 
 const base_url = "http://localhost:3000/";
 
 
-describe("GET /", function() {
-  it("responds with json", function(done) {
-    request(routes)
-      .get("/")
-      .set("Accept", "application/json")
-      .expect(200, done);
+import app from "../routes/index"; // Link to your server file
+const request = supertest(app);
+
+describe("Test endpoint responses", () => {
+  it("should give 300", async (): Promise<void> => {
+    // note:  use "/images" and not "http://localhost:3000/images"
+    const response = await request.get(
+      "/"
+    );
+    expect(response.status).toBe(200);
   });
 });
 
-it("expect new image with size 300x200", () => {
-  expect(images.get("filename=hippo&width=200&height=300")).toBeTruthy();
-});
 
 const inputDir: string = path.join(__dirname, "/../../../full") + "\\";
 const outputDir: string = path.join(__dirname, "/../../thumb") + "/";

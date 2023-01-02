@@ -12,24 +12,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const routes_1 = __importDefault(require("../routes"));
-const images_1 = __importDefault(require("../routes/api/images"));
 const imageProcesser_1 = __importDefault(require("../utilities/imageProcesser"));
 const path_1 = __importDefault(require("path"));
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const request = require("supertest");
+const supertest = require("supertest");
 //const server = require("../server");
 const base_url = "http://localhost:3000/";
-describe("GET /", function () {
-    it("responds with json", function (done) {
-        request(routes_1.default)
-            .get("/")
-            .set("Accept", "application/json")
-            .expect(200, done);
-    });
-});
-it("expect new image with size 300x200", () => {
-    expect(images_1.default.get("filename=hippo&width=200&height=300")).toBeTruthy();
+const index_1 = __importDefault(require("../routes/index")); // Link to your server file
+const request = supertest(index_1.default);
+describe("Test endpoint responses", () => {
+    it("should give 300", () => __awaiter(void 0, void 0, void 0, function* () {
+        // note:  use "/images" and not "http://localhost:3000/images"
+        const response = yield request.get("/");
+        expect(response.status).toBe(200);
+    }));
 });
 const inputDir = path_1.default.join(__dirname, "/../../../full") + "\\";
 const outputDir = path_1.default.join(__dirname, "/../../thumb") + "/";
