@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import resizeImage from "../../utilities/imageProcesser";
 import { access, constants } from "node:fs";
+import fs from "fs";
 const images = express.Router();
 
 /*images.get('/', (req, res) => {
@@ -41,6 +42,7 @@ images.get(
 
     const info = new URL(req.url, `http://${req.headers.host}`);
 
+    
     let fileName = "";
     const height = parseInt(info.searchParams.get("height")!);
     const width = parseInt(info.searchParams.get("width")!);
@@ -49,45 +51,34 @@ images.get(
     } else {
       fileName = "empty.png";
     }
+    
+    const outPath = `${outputDir}${fileName}-${height}-${width}.jpg`
+    const inPath = `${inputDir}${fileName}.jpg`
 
     if (isNaN(height) || isNaN(width)) {
-      res.send("Please Enter desired height and dimensions");
-    } else {
+      res.send("Please Enter desired height and width dimensions");
+    } else if ( height<=0 || width<=0){
+      res.send("Please Enter positive height and width dimensions");
+    } else if (fs.existsSync(inPath)) {
       //const myLog = new File(`${outputDir}${fileName}${height}${width}.jpg`);
       access(
-        `${outputDir}${fileName}${height}${width}.jpg`,
+        outPath,
         constants.F_OK,
         (err) => {
           console.log("does not exist");
           resizeImage(inputDir, outputDir, fileName, height, width);
           setTimeout(() => {
-            res.sendFile(`${fileName}${height}${width}.jpg`, options);
+            res.sendFile(`${fileName}-${height}-${width}.jpg`, options);
           }, 1000);
         }
       );
 
       //res.sendStatus(200);
+    } else if (!fs.existsSync(inPath)) {
+      res.send("Filename not found!")
     }
 
-    /*res.sendFile(`${fileName}${height}${width}.jpg`, options, function (err) {
-    if (err) {
-      sharp(`${inputDir}${fileName}.jpg`)
-      .resize(height, width)
-      .toFile(`${outputDir}${fileName}${height}${width}.jpg`, function(err: Error) {
-        if (err) {
-          next(err)
-        } else {
-          console.log('Sent:', fileName)
-        }
-      });
 
-      res.sendFile(`${fileName}${height}${width}.jpg`, options);
-      res.sendStatus(200);
-    } else {
-      console.log('Retrieved:', fileName)
-      res.sendStatus(200);
-    }
-  })*/
   }
 );
 

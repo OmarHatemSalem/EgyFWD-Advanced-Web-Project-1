@@ -11,7 +11,7 @@ const resizeImage = (
   sharp(`${inputDir}${fileName}.jpg`)
     .resize(height, width)
     .toFile(
-      `${outputDir}${fileName}${height}${width}.jpg`,
+      `${outputDir}${fileName}-${height}-${width}.jpg`,
       function (err: Error) {
         if (err) {
           console.log("Error Occured!");
