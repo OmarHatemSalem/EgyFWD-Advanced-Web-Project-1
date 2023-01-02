@@ -1,8 +1,5 @@
-import routes from "../routes";
-import images from "../routes/api/images";
 import resizeImage from "../utilities/imageProcesser";
 import path from "path";
-import express from "express";
 
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -10,7 +7,6 @@ const supertest = require("supertest");
 //const server = require("../server");
 
 
-const base_url = "http://localhost:3000/";
 
 
 import app from "../routes/index"; // Link to your server file

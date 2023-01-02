@@ -9,7 +9,7 @@ routes.get("/", (_req: express.Request, res: express.Response) => {
   // console.log(req.url);
   res.send("Hello World!");
 });
-routes.use("/images", images);
+routes.use("/api/images", images);
 
 
 app.use("/", routes);
