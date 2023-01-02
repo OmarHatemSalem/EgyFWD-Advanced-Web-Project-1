@@ -16,8 +16,17 @@ const routes_1 = __importDefault(require("../routes"));
 const images_1 = __importDefault(require("../routes/api/images"));
 const imageProcesser_1 = __importDefault(require("../utilities/imageProcesser"));
 const path_1 = __importDefault(require("path"));
-it("expect Hello World", () => {
-    expect(routes_1.default.get("/")).toBeTruthy();
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const request = require("supertest");
+//const server = require("../server");
+const base_url = "http://localhost:3000/";
+describe("GET /", function () {
+    it("responds with json", function (done) {
+        request(routes_1.default)
+            .get("/")
+            .set("Accept", "application/json")
+            .expect(200, done);
+    });
 });
 it("expect new image with size 300x200", () => {
     expect(images_1.default.get("filename=hippo&width=200&height=300")).toBeTruthy();

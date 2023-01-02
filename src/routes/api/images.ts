@@ -3,7 +3,6 @@ import path from "path";
 import resizeImage from "../../utilities/imageProcesser";
 import { access, constants } from "node:fs";
 const images = express.Router();
-const request = require("supertest");
 
 /*images.get('/', (req, res) => {
     res.send(path.join(__dirname, '/../../full'));
@@ -40,7 +39,7 @@ images.get(
     const inputDir: string = path.join(__dirname, "/../../../full") + "\\";
     const outputDir: string = path.join(__dirname, "/../../thumb") + "/";
 
-    let info = new URL(req.url, `http://${req.headers.host}`);
+    const info = new URL(req.url, `http://${req.headers.host}`);
 
     let fileName = "";
     const height = parseInt(info.searchParams.get("height")!);

@@ -8,7 +8,6 @@ const path_1 = __importDefault(require("path"));
 const imageProcesser_1 = __importDefault(require("../../utilities/imageProcesser"));
 const node_fs_1 = require("node:fs");
 const images = express_1.default.Router();
-const request = require("supertest");
 /*images.get('/', (req, res) => {
     res.send(path.join(__dirname, '/../../full'));
 
@@ -35,7 +34,7 @@ images.get("/", function (req, res, next) {
     };
     const inputDir = path_1.default.join(__dirname, "/../../../full") + "\\";
     const outputDir = path_1.default.join(__dirname, "/../../thumb") + "/";
-    let info = new URL(req.url, `http://${req.headers.host}`);
+    const info = new URL(req.url, `http://${req.headers.host}`);
     let fileName = "";
     const height = parseInt(info.searchParams.get("height"));
     const width = parseInt(info.searchParams.get("width"));

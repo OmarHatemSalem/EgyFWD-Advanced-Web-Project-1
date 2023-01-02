@@ -2,9 +2,24 @@ import routes from "../routes";
 import images from "../routes/api/images";
 import resizeImage from "../utilities/imageProcesser";
 import path from "path";
+import express from "express";
 
-it("expect Hello World", () => {
-  expect(routes.get("/")).toBeTruthy();
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const request = require("supertest");
+//const server = require("../server");
+
+
+const base_url = "http://localhost:3000/";
+
+
+describe("GET /", function() {
+  it("responds with json", function(done) {
+    request(routes)
+      .get("/")
+      .set("Accept", "application/json")
+      .expect(200, done);
+  });
 });
 
 it("expect new image with size 300x200", () => {
