@@ -29,7 +29,7 @@ images.get(
     next: express.NextFunction
   ) {
     const options = {
-      root: path.join(__dirname, "/../../thumb"),
+      root: path.join(__dirname, "/../../../thumb"),
       dotfiles: "deny",
       headers: {
         "x-timestamp": Date.now(),
@@ -38,7 +38,7 @@ images.get(
     };
 
     const inputDir: string = path.join(__dirname, "/../../../full") + "\\";
-    const outputDir: string = path.join(__dirname, "/../../thumb") + "/";
+    const outputDir: string = path.join(__dirname, "/../../../thumb") + "\\";
 
     const info = new URL(req.url, `http://${req.headers.host}`);
 
