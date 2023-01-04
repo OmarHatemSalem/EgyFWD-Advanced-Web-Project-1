@@ -1,7 +1,6 @@
 import express from "express";
 import path from "path";
 import resizeImage from "../../utilities/imageProcesser";
-import { access, constants } from "node:fs";
 import fs from "fs";
 const images = express.Router();
 
@@ -23,11 +22,9 @@ const images = express.Router();
 
 images.get(
   "/",
-  function (
+  async function (
     req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) {
+    res: express.Response  ) : Promise<void> {
     const options = {
       root: path.join(__dirname, "/../../../thumb"),
       dotfiles: "deny",
@@ -44,38 +41,38 @@ images.get(
 
     
     let fileName = "";
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const height = parseInt(info.searchParams.get("height")!);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const width = parseInt(info.searchParams.get("width")!);
     if (info.searchParams.has("filename")) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       fileName = info.searchParams.get("filename")!; /*fileName += ".jpg"*/
     } else {
       fileName = "empty.png";
     }
     
-    const outPath = `${outputDir}${fileName}-${height}-${width}.jpg`
-    const inPath = `${inputDir}${fileName}.jpg`
+    const outPath = `${outputDir}${fileName}-${height}-${width}.jpg`;
+    const inPath = `${inputDir}${fileName}.jpg`;
+
+    console.log(`${height} - ${width}`);
 
     if (isNaN(height) || isNaN(width)) {
       res.send("Please Enter desired height and width dimensions");
     } else if ( height<=0 || width<=0){
       res.send("Please Enter positive height and width dimensions");
-    } else if (fs.existsSync(inPath)) {
-      //const myLog = new File(`${outputDir}${fileName}${height}${width}.jpg`);
-      access(
-        outPath,
-        constants.F_OK,
-        (err) => {
-          console.log("does not exist");
-          resizeImage(inputDir, outputDir, fileName, height, width);
-          setTimeout(() => {
-            res.sendFile(`${fileName}-${height}-${width}.jpg`, options);
-          }, 1000);
+    } else if (fs.existsSync(inPath) && fs.existsSync(outPath)) {
+      res.status(200).sendFile(outPath);
+    } else if (fs.existsSync(inPath) && !fs.existsSync(outPath)) {
+        console.log("does not exist");
+        try {
+          await resizeImage(inputDir, outputDir, fileName, height, width);
+          await res.status(200).sendFile(outPath);
+        } catch (e) {
+          res.send("error");
         }
-      );
-
-      //res.sendStatus(200);
     } else if (!fs.existsSync(inPath)) {
-      res.send("Filename not found!")
+      res.send("Filename not found!");
     }
 
 
